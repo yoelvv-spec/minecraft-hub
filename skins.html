@@ -1,1 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Skins de Minecraft | MineHub</title>
+
+<meta
+name="description"
+content="Busca y descubre skins de Minecraft."
+>
+
+<link rel="stylesheet"
+href="style.css">
+
+<style>
+
+.skin-page {
+
+max-width:1100px;
+
+margin:40px auto;
+
+padding:0 20px;
+
+}
+
+.skin-search {
+
+display:flex;
+
+max-width:700px;
+
+margin:25px auto 40px;
+
+}
+
+.skin-search input {
+
+flex:1;
+
+padding:15px;
+
+font-size:16px;
+
+border:1px solid #ddd;
+
+border-radius:8px 0 0 8px;
+
+}
+
+.skin-search button {
+
+padding:15px 25px;
+
+background:#2e7d32;
+
+color:white;
+
+border:none;
+
+border-radius:0 8px 8px 0;
+
+font-weight:bold;
+
+cursor:pointer;
+
+}
+
+.skin-result {
+
+background:white;
+
+padding:30px;
+
+border-radius:15px;
+
+max-width:500px;
+
+margin:auto;
+
+text-align:center;
+
+box-shadow:
+0 3px 12px rgba(0,0,0,.08);
+
+}
+
+.skin-result img {
+
+width:300px;
+
+max-width:100%;
+
+image-rendering:auto;
+
+}
+
+.skin-name {
+
+font-size:24px;
+
+font-weight:bold;
+
+margin:20px 0;
+
+}
+
+.download {
+
+display:inline-block;
+
+padding:12px 20px;
+
+background:#2e7d32;
+
+color:white;
+
+text-decoration:none;
+
+border-radius:8px;
+
+font-weight:bold;
+
+}
+
+.message {
+
+text-align:center;
+
+padding:30px;
+
+color:#666;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<div class="header">
+
+<a
+href="index.html"
+class="logo">
+
+⛏️ MineHub
+
+</a>
+
+
+<nav>
+
+<a href="skins.html">
+Skins
+</a>
+
+<a href="servidores.html">
+Servidores
+</a>
+
+<a href="seeds.html">
+Seeds
+</a>
+
+<a href="recetas.html">
+Recetas
+</a>
+
+</nav>
+
+</div>
+
+</header>
+
+
+<main class="skin-page">
+
+
+<h1>
+👤 Skins de Minecraft
+</h1>
+
+
+<p>
+
+Busca un jugador para ver su skin.
+
+</p>
+
+
+<form
+class="skin-search"
+id="skinForm"
+>
+
+<input
+id="playerInput"
+type="text"
+placeholder="Ejemplo: Notch"
+autocomplete="off"
+>
+
+<button type="submit">
+
+🔎 Buscar
+
+</button>
+
+</form>
+
+
+<div
+id="result"
+class="message"
+>
+
+Escribe un nombre de jugador
+para buscar su skin.
+
+</div>
+
+
+</main>
+
+
+<footer>
+
+MineHub © 2026
+
+</footer>
+
+
+<script>
+
+
+const WORKER_URL =
+
+"https://TU-WORKER.workers.dev";
+
+
+const form =
+
+document.getElementById(
+"skinForm"
+);
+
+
+const input =
+
+document.getElementById(
+"playerInput"
+);
+
+
+const result =
+
+document.getElementById(
+"result"
+);
+
+
+form.addEventListener(
+"submit",
+async function(event) {
+
+
+event.preventDefault();
+
+
+const player =
+
+input.value.trim();
+
+
+if (!player) {
+
+return;
+
+}
+
+
+result.innerHTML = `
+
+<div class="message">
+
+⏳ Buscando skin...
+
+</div>
+
+`;
+
+
+const imageUrl =
+
+WORKER_URL +
+
+"/skin?player=" +
+
+encodeURIComponent(player);
+
+
+const img =
+
+new Image();
+
+
+img.onload = function() {
+
+
+result.innerHTML = `
+
+<div class="skin-result">
+
+
+<img
+
+src="${imageUrl}"
+
+alt="Skin de Minecraft de ${player}"
+
+>
+
+
+<div class="skin-name">
+
+${player}
+
+</div>
+
+
+<a
+
+class="download"
+
+href="${imageUrl}"
+
+download="${player}.png"
+
+>
+
+📥 Descargar skin
+
+</a>
+
+
+</div>
+
+`;
+
+};
+
+
+img.onerror = function() {
+
+
+result.innerHTML = `
+
+<div class="message">
+
+❌ No encontramos una skin
+para ese jugador.
+
+</div>
+
+`;
+
+};
+
+
+img.src = imageUrl;
+
+
+});
+
+
+</script>
+
+
+</body>
+
+</html>
