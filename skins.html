@@ -1,64 +1,106 @@
-<script>
+<!DOCTYPE html>
+<html lang="es">
 
-const form = document.getElementById("skinForm");
-const input = document.getElementById("playerInput");
-const result = document.getElementById("result");
+<head>
 
-form.addEventListener("submit", function(event) {
+<meta charset="UTF-8">
 
-    event.preventDefault();
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    const player = input.value.trim();
+<title>Skins de Minecraft | MineHub</title>
 
-    if (!player) {
-        return;
-    }
+<link rel="stylesheet" href="style.css">
 
-    result.innerHTML = `
-        <div class="message">
-            ⏳ Buscando skin...
-        </div>
-    `;
+</head>
 
-    const imageUrl =
-        "https://api.mcskin.me/skin/" +
-        encodeURIComponent(player);
+<body>
 
-    result.innerHTML = `
-        <div class="skin-result">
+<header>
 
-            <img
-                src="${imageUrl}"
-                alt="Skin de Minecraft de ${player}"
-                style="width:300px; image-rendering:pixelated;"
-                onerror="mostrarError()"
-            >
+<div class="header">
 
-            <div class="skin-name">
-                ${player}
-            </div>
+<a href="index.html" class="logo">
+⛏️ MineHub
+</a>
 
-            <a
-                class="download"
-                href="${imageUrl}"
-                target="_blank"
-            >
-                🖼️ Abrir skin
-            </a>
+<nav>
 
-        </div>
-    `;
+<a href="skins.html">Skins</a>
 
-});
+<a href="servidores.html">Servidores</a>
 
-function mostrarError() {
+<a href="seeds.html">Seeds</a>
 
-    result.innerHTML = `
-        <div class="message">
-            ❌ No se pudo cargar la skin.
-        </div>
-    `;
+<a href="recetas.html">Recetas</a>
 
-}
+</nav>
 
-</script>
+</div>
+
+</header>
+
+
+<main style="max-width:1000px;margin:50px auto;padding:20px;text-align:center;">
+
+<h1>👤 Skins de Minecraft</h1>
+
+<p style="margin:20px 0;">
+Prueba nuestra primera skin:
+</p>
+
+
+<div style="
+background:white;
+padding:30px;
+border-radius:15px;
+max-width:400px;
+margin:auto;
+">
+
+<h2>Notch</h2>
+
+<br>
+
+<img
+src="https://api.mcskin.me/skin/Notch"
+alt="Skin de Minecraft de Notch"
+style="
+width:300px;
+height:300px;
+image-rendering:pixelated;
+object-fit:contain;
+"
+>
+
+<br><br>
+
+<a
+href="https://api.mcskin.me/skin/Notch"
+target="_blank"
+style="
+display:inline-block;
+padding:12px 20px;
+background:#2e7d32;
+color:white;
+text-decoration:none;
+border-radius:8px;
+">
+
+Abrir skin
+
+</a>
+
+</div>
+
+</main>
+
+
+<footer>
+
+MineHub © 2026
+
+</footer>
+
+</body>
+
+</html>
