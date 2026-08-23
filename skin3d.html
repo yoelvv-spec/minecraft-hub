@@ -5,9 +5,10 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-<title>Prueba 3D - MineHub</title>
+<title>Skin 3D | MineHub</title>
 
 <style>
 
@@ -17,20 +18,41 @@ body {
     font-family: Arial, sans-serif;
 }
 
+header {
+    background: #1b5e20;
+    padding: 18px 20px;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+}
+
 h1 {
     text-align: center;
-    padding: 20px;
 }
 
 #viewer {
     width: 600px;
-    height: 600px;
-    max-width: 90vw;
-    margin: auto;
+    height: 650px;
+    max-width: 95vw;
+    margin: 20px auto;
+    background: #cbd5da;
+    border-radius: 20px;
+    overflow: hidden;
 }
 
 canvas {
     display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.info {
+    text-align: center;
+    color: #555;
 }
 
 </style>
@@ -40,7 +62,22 @@ canvas {
 
 <body>
 
-<h1>🟩 Prueba 3D MineHub</h1>
+
+<header>
+
+<a href="index.html">
+⛏️ MineHub
+</a>
+
+</header>
+
+
+<h1>🧑 Skin 3D de Minecraft</h1>
+
+<p class="info">
+Arrastra el personaje para girarlo.
+</p>
+
 
 <div id="viewer"></div>
 
@@ -49,6 +86,7 @@ canvas {
 
 
 <script>
+
 
 const viewer =
 document.getElementById("viewer");
@@ -60,21 +98,25 @@ const scene =
 new THREE.Scene();
 
 scene.background =
-new THREE.Color(0xdbe3e8);
+new THREE.Color(0xcbd5da);
 
 
 /* CÁMARA */
 
 const camera =
 new THREE.PerspectiveCamera(
-    45,
+    35,
     viewer.clientWidth /
     viewer.clientHeight,
     0.1,
     100
 );
 
-camera.position.z = 5;
+camera.position.set(
+    5,
+    3.5,
+    8
+);
 
 
 /* RENDERER */
@@ -89,48 +131,330 @@ renderer.setSize(
     viewer.clientHeight
 );
 
+renderer.setPixelRatio(
+    Math.min(window.devicePixelRatio, 2)
+);
+
 viewer.appendChild(
     renderer.domElement
 );
 
 
-/* CUBO */
+/* LUCES */
 
-const geometry =
-new THREE.BoxGeometry(
-    2,
-    2,
-    2
+scene.add(
+    new THREE.AmbientLight(
+        0xffffff,
+        2
+    )
+);
+
+const light =
+new THREE.DirectionalLight(
+    0xffffff,
+    3
+);
+
+light.position.set(
+    5,
+    10,
+    7
+);
+
+scene.add(light);
+
+
+/* GRUPO */
+
+const player =
+new THREE.Group();
+
+scene.add(player);
+
+
+/* TEXTURA */
+
+const loader =
+new THREE.TextureLoader();
+
+const texture =
+loader.load(
+    "https://api.mcskin.me/skin/Notch"
+);
+
+texture.magFilter =
+THREE.NearestFilter;
+
+texture.minFilter =
+THREE.NearestFilter;
+
+
+/*
+================================================
+CREAR CUBO CON UV PERSONALIZADOS
+================================================
+*/
+
+function createPart(
+    width,
+    height,
+    depth,
+    x,
+    y,
+    z
+) {
+
+    const geometry =
+    new THREE.BoxGeometry(
+        width,
+        height,
+        depth
+    );
+
+    const material =
+    new THREE.MeshLambertMaterial({
+        map: texture
+    });
+
+    const mesh =
+    new THREE.Mesh(
+        geometry,
+        material
+    );
+
+    mesh.position.set(
+        x,
+        y,
+        z
+    );
+
+    player.add(mesh);
+
+    return mesh;
+
+}
+
+
+/*
+================================================
+CABEZA
+================================================
+*/
+
+createPart(
+    1,
+    1,
+    1,
+    0,
+    3.5,
+    0
 );
 
 
-const material =
-new THREE.MeshBasicMaterial({
-    color: 0x2e7d32
+/*
+================================================
+CUERPO
+================================================
+*/
+
+createPart(
+    1,
+    1.5,
+    0.5,
+    0,
+    2.25,
+    0
+);
+
+
+/*
+================================================
+BRAZOS
+================================================
+*/
+
+createPart(
+    0.5,
+    1.5,
+    0.5,
+    -0.75,
+    2.25,
+    0
+);
+
+createPart(
+    0.5,
+    1.5,
+    0.5,
+    0.75,
+    2.25,
+    0
+);
+
+
+/*
+================================================
+PIERNAS
+================================================
+*/
+
+createPart(
+    0.5,
+    1.5,
+    0.5,
+    -0.25,
+    0.75,
+    0
+);
+
+createPart(
+    0.5,
+    1.5,
+    0.5,
+    0.25,
+    0.75,
+    0
+);
+
+
+/*
+================================================
+SUELO
+================================================
+*/
+
+const floorGeometry =
+new THREE.PlaneGeometry(
+    20,
+    20
+);
+
+const floorMaterial =
+new THREE.MeshLambertMaterial({
+    color: 0xa5b0b5
 });
 
-
-const cube =
+const floor =
 new THREE.Mesh(
-    geometry,
-    material
+    floorGeometry,
+    floorMaterial
+);
+
+floor.rotation.x =
+-Math.PI / 2;
+
+floor.position.y =
+0;
+
+scene.add(floor);
+
+
+/*
+================================================
+ROTACIÓN CON RATÓN
+================================================
+*/
+
+let dragging = false;
+
+let previousX = 0;
+
+
+renderer.domElement.addEventListener(
+    "mousedown",
+    function(event) {
+
+        dragging = true;
+
+        previousX =
+        event.clientX;
+
+    }
 );
 
 
-scene.add(cube);
+window.addEventListener(
+    "mouseup",
+    function() {
+
+        dragging = false;
+
+    }
+);
 
 
-/* ANIMACIÓN */
+window.addEventListener(
+    "mousemove",
+    function(event) {
+
+        if (!dragging) {
+            return;
+        }
+
+        const movement =
+        event.clientX -
+        previousX;
+
+        player.rotation.y +=
+        movement * 0.01;
+
+        previousX =
+        event.clientX;
+
+    }
+);
+
+
+/*
+================================================
+ROTACIÓN TÁCTIL
+================================================
+*/
+
+let touchX = 0;
+
+
+renderer.domElement.addEventListener(
+    "touchstart",
+    function(event) {
+
+        touchX =
+        event.touches[0].clientX;
+
+    }
+);
+
+
+renderer.domElement.addEventListener(
+    "touchmove",
+    function(event) {
+
+        const newX =
+        event.touches[0].clientX;
+
+        const movement =
+        newX - touchX;
+
+        player.rotation.y +=
+        movement * 0.01;
+
+        touchX = newX;
+
+    }
+);
+
+
+/*
+================================================
+ANIMACIÓN
+================================================
+*/
 
 function animate() {
 
     requestAnimationFrame(
         animate
     );
-
-    cube.rotation.x += 0.01;
-
-    cube.rotation.y += 0.01;
 
     renderer.render(
         scene,
@@ -139,8 +463,33 @@ function animate() {
 
 }
 
-
 animate();
+
+
+/*
+================================================
+RESIZE
+================================================
+*/
+
+window.addEventListener(
+    "resize",
+    function() {
+
+        camera.aspect =
+        viewer.clientWidth /
+        viewer.clientHeight;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(
+            viewer.clientWidth,
+            viewer.clientHeight
+        );
+
+    }
+);
+
 
 </script>
 
