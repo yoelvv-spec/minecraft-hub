@@ -245,9 +245,8 @@ MineHub © 2026
 <script>
 
 
-const WORKER_URL =
-
-"https://https://minehub-api.yoelvv.workers.dev";
+const API_URL =
+"https://api.mcskin.me";
 
 
 const form =
@@ -304,12 +303,11 @@ result.innerHTML = `
 
 const imageUrl =
 
-WORKER_URL +
+API_URL +
 
-"/skin?player=" +
+"/skin/" +
 
 encodeURIComponent(player);
-
 
 const img =
 
