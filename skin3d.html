@@ -7,126 +7,30 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Visor 3D de Skin | MineHub</title>
+<title>Prueba 3D - MineHub</title>
 
 <style>
 
-* {
-    box-sizing: border-box;
-}
-
 body {
-
     margin: 0;
-
+    background: #dbe3e8;
     font-family: Arial, sans-serif;
-
-    background: #f1f3f4;
-
-    color: #172016;
-
-}
-
-header {
-
-    background: #1b5e20;
-
-    padding: 18px 20px;
-
-}
-
-header a {
-
-    color: white;
-
-    text-decoration: none;
-
-    font-size: 24px;
-
-    font-weight: bold;
-
-}
-
-.container {
-
-    max-width: 1000px;
-
-    margin: 40px auto;
-
-    padding: 20px;
-
-    text-align: center;
-
 }
 
 h1 {
-
-    margin-bottom: 10px;
-
+    text-align: center;
+    padding: 20px;
 }
 
-.viewer {
-
-    width: 100%;
-
-    max-width: 600px;
-
+#viewer {
+    width: 600px;
     height: 600px;
-
-    margin: 30px auto;
-
-    background: #dbe3e8;
-
-    border-radius: 20px;
-
-    overflow: hidden;
-
-    position: relative;
-
+    max-width: 90vw;
+    margin: auto;
 }
 
-#canvas {
-
-    width: 100%;
-
-    height: 100%;
-
+canvas {
     display: block;
-
-}
-
-.controls {
-
-    margin-top: 15px;
-
-    color: #666;
-
-}
-
-button {
-
-    background: #2e7d32;
-
-    border: none;
-
-    color: white;
-
-    padding: 12px 20px;
-
-    border-radius: 8px;
-
-    cursor: pointer;
-
-    font-weight: bold;
-
-    margin: 5px;
-
-}
-
-button:hover {
-
-    background: #1b5e20;
-
 }
 
 </style>
@@ -136,76 +40,24 @@ button:hover {
 
 <body>
 
+<h1>🟩 Prueba 3D MineHub</h1>
 
-<header>
-
-<a href="index.html">
-
-⛏️ MineHub
-
-</a>
-
-</header>
+<div id="viewer"></div>
 
 
-<div class="container">
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
 
-<h1>
+<script>
 
-🧑 Skin 3D de Minecraft
-
-</h1>
-
-
-<p>
-
-Arrastra el personaje para girarlo.
-
-</p>
-
-
-<div class="viewer">
-
-<canvas id="canvas"></canvas>
-
-</div>
-
-
-<div class="controls">
-
-Arrastra con el ratón o el dedo para girar.
-
-</div>
-
-
-<button onclick="resetCamera()">
-
-↻ Reiniciar
-
-</button>
-
-
-</div>
-
-
-<script type="module">
-
-import * as THREE from
-'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
-
-import { OrbitControls } from
-'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
-
-
-const canvas = document.getElementById("canvas");
-
-const viewer = document.querySelector(".viewer");
+const viewer =
+document.getElementById("viewer");
 
 
 /* ESCENA */
 
-const scene = new THREE.Scene();
+const scene =
+new THREE.Scene();
 
 scene.background =
 new THREE.Color(0xdbe3e8);
@@ -216,19 +68,19 @@ new THREE.Color(0xdbe3e8);
 const camera =
 new THREE.PerspectiveCamera(
     45,
-    viewer.clientWidth / viewer.clientHeight,
+    viewer.clientWidth /
+    viewer.clientHeight,
     0.1,
     100
 );
 
-camera.position.set(0, 1, 5);
+camera.position.z = 5;
 
 
-/* RENDER */
+/* RENDERER */
 
 const renderer =
 new THREE.WebGLRenderer({
-    canvas: canvas,
     antialias: true
 });
 
@@ -237,45 +89,12 @@ renderer.setSize(
     viewer.clientHeight
 );
 
-renderer.setPixelRatio(
-    Math.min(window.devicePixelRatio, 2)
-);
-
-
-/* CONTROLES */
-
-const controls =
-new OrbitControls(
-    camera,
+viewer.appendChild(
     renderer.domElement
 );
 
-controls.enableDamping = true;
 
-
-/* LUZ */
-
-const light =
-new THREE.DirectionalLight(
-    0xffffff,
-    3
-);
-
-light.position.set(3, 5, 5);
-
-scene.add(light);
-
-
-const ambient =
-new THREE.AmbientLight(
-    0xffffff,
-    2
-);
-
-scene.add(ambient);
-
-
-/* CUBO DE PRUEBA */
+/* CUBO */
 
 const geometry =
 new THREE.BoxGeometry(
@@ -286,7 +105,7 @@ new THREE.BoxGeometry(
 
 
 const material =
-new THREE.MeshStandardMaterial({
+new THREE.MeshBasicMaterial({
     color: 0x2e7d32
 });
 
@@ -305,11 +124,13 @@ scene.add(cube);
 
 function animate() {
 
-    requestAnimationFrame(animate);
+    requestAnimationFrame(
+        animate
+    );
+
+    cube.rotation.x += 0.01;
 
     cube.rotation.y += 0.01;
-
-    controls.update();
 
     renderer.render(
         scene,
@@ -318,28 +139,8 @@ function animate() {
 
 }
 
+
 animate();
-
-
-/* RESIZE */
-
-window.addEventListener(
-    "resize",
-    function() {
-
-        camera.aspect =
-        viewer.clientWidth /
-        viewer.clientHeight;
-
-        camera.updateProjectionMatrix();
-
-        renderer.setSize(
-            viewer.clientWidth,
-            viewer.clientHeight
-        );
-
-    }
-);
 
 </script>
 
